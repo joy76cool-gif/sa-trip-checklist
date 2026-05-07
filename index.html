@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>南非旅行待辦清單</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", sans-serif; background: #f0f2f5; padding: 24px; color: #1a1a1a; }
+  h1 { text-align: center; margin-bottom: 6px; font-size: 1.6rem; color: #1a3a5c; }
+  .subtitle { text-align: center; color: #666; margin-bottom: 24px; font-size: 0.9rem; }
+
+  .trip-info { background: #fff; border-radius: 12px; padding: 16px 20px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; }
+  .trip-info .item { text-align: center; }
+  .trip-info .label { font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
+  .trip-info .value { font-size: 1rem; font-weight: 600; color: #1a3a5c; }
+
+  .visa-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+  .visa-card { background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .visa-card h3 { font-size: 0.85rem; color: #888; margin-bottom: 8px; }
+  .visa-card .names { font-size: 1rem; font-weight: 600; line-height: 1.6; }
+  .visa-card.need-visa { border-left: 4px solid #e74c3c; }
+  .visa-card.no-visa { border-left: 4px solid #27ae60; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; margin-left: 4px; vertical-align: middle; }
+  .badge-tw { background: #fdecea; color: #c0392b; }
+  .badge-ca { background: #fef3e2; color: #d35400; }
+  .badge-us { background: #e8f4fd; color: #2471a3; }
+
+  .table-wrapper { background: #fff; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); overflow-x: auto; margin-bottom: 20px; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  thead th { background: #1a3a5c; color: #fff; padding: 12px 8px; text-align: center; font-weight: 600; position: sticky; top: 0; white-space: nowrap; }
+  thead th:first-child { text-align: left; padding-left: 16px; min-width: 260px; }
+  tbody td { padding: 10px 8px; text-align: center; border-bottom: 1px solid #eee; vertical-align: top; }
+  tbody td:first-child { text-align: left; padding-left: 16px; font-weight: 500; }
+  tbody tr:hover { background: #f8f9fb; }
+  tbody tr.section-header td { background: #e8edf2; font-weight: 700; color: #1a3a5c; text-align: left; padding-left: 16px; font-size: 0.9rem; }
+  tbody tr.blocker td:first-child { border-left: 3px solid #e74c3c; }
+
+  .need { color: #e74c3c; font-weight: 700; }
+  .done { color: #27ae60; font-weight: 700; }
+  .na { color: #bbb; }
+  .pending { color: #f39c12; font-weight: 600; }
+  .blocker-tag { display: inline-block; background: #e74c3c; color: #fff; font-size: 0.65rem; padding: 1px 6px; border-radius: 3px; margin-left: 4px; font-weight: 700; vertical-align: middle; }
+
+  /* Interactive checkboxes */
+  .cb-cell { cursor: pointer; user-select: none; }
+  .cb-cell input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: #27ae60; }
+  .cb-cell.checked { background: #f0faf0; }
+  .cb-cell label { cursor: pointer; font-size: 0.75rem; display: block; margin-top: 2px; }
+
+  /* Progress bar */
+  .progress-bar-wrapper { background: #fff; border-radius: 12px; padding: 16px 20px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .progress-bar-wrapper h3 { font-size: 0.9rem; color: #1a3a5c; margin-bottom: 10px; }
+  .progress-track { background: #e8edf2; border-radius: 8px; height: 24px; overflow: hidden; position: relative; }
+  .progress-fill { background: linear-gradient(90deg, #27ae60, #2ecc71); height: 100%; border-radius: 8px; transition: width 0.4s ease; min-width: 0; }
+  .progress-text { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; color: #1a3a5c; }
+  .reset-btn { background: none; border: 1px solid #ccc; border-radius: 6px; padding: 4px 12px; font-size: 0.75rem; color: #888; cursor: pointer; margin-top: 8px; float: right; }
+  .reset-btn:hover { background: #fee; border-color: #e74c3c; color: #e74c3c; }
+
+  small { color: #888; font-weight: normal; }
+  .detail-box { background: #f8f9fb; border-radius: 8px; padding: 12px 16px; margin: 6px 0; font-size: 0.82rem; line-height: 1.6; border-left: 3px solid #2471a3; }
+  .detail-box.warn { border-left-color: #e74c3c; }
+  .detail-box ul { margin: 4px 0 4px 16px; }
+  .detail-box li { margin-bottom: 2px; }
+
+  .notes-section { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-bottom: 20px; }
+  .notes-section h2 { font-size: 1.1rem; color: #1a3a5c; margin-bottom: 12px; border-bottom: 2px solid #e8edf2; padding-bottom: 8px; }
+  .note-item { padding: 8px 0; border-bottom: 1px solid #f0f0f0; font-size: 0.85rem; line-height: 1.6; }
+  .note-item:last-child { border-bottom: none; }
+  .note-label { font-weight: 600; color: #e74c3c; }
+  .note-label.info { color: #2471a3; }
+  .note-label.ok { color: #27ae60; }
+
+  .yf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 8px 0; }
+  .yf-region { background: #fff; border-radius: 8px; padding: 12px; border: 1px solid #eee; }
+  .yf-region h4 { font-size: 0.8rem; color: #1a3a5c; margin-bottom: 6px; }
+  .yf-region .countries { font-size: 0.78rem; color: #555; line-height: 1.5; }
+
+  .footer { text-align: center; color: #aaa; font-size: 0.75rem; margin-top: 20px; }
+</style>
+</head>
+<body>
+
+<h1>🇿🇦 南非旅行 — 待辦總表</h1>
+<p class="subtitle">行程日期：2026/11/24 — 2026/12/06（12天）</p>
+
+<div class="trip-info">
+  <div class="item"><div class="label">出發日</div><div class="value">2026/11/24（二）</div></div>
+  <div class="item"><div class="label">回程日</div><div class="value">2026/12/06（日）</div></div>
+  <div class="item"><div class="label">總天數</div><div class="value">12 天</div></div>
+  <div class="item"><div class="label">人數</div><div class="value">8 人</div></div>
+  <div class="item"><div class="label">目的地</div><div class="value">南非</div></div>
+</div>
+
+<!-- Usage Instructions -->
+<div class="notes-section" style="border: 1px solid #d5e8f0; background: #f0f8ff;">
+  <h2 style="color: #2471a3; font-size: 1rem;">📌 使用說明（請先看這裡）</h2>
+  <div style="font-size: 0.85rem; line-height: 1.8; padding: 4px 0;">
+    ✅ 點表格裡的框框即可<strong>打勾</strong>，再點一下可以取消<br>
+    ✅ 打勾紀錄會<strong>自動儲存</strong>在你的瀏覽器裡，關掉再開還在<br>
+    ⚠️ 紀錄只存在<strong>你自己的裝置＋瀏覽器</strong>裡，別人看不到你的勾<br>
+    ⚠️ 請固定用<strong>同一台手機/電腦</strong>的<strong>同一個瀏覽器</strong>打開此頁面<br>
+    ❌ 換裝置、換瀏覽器、清除瀏覽紀錄、或用無痕模式 → 打勾紀錄會消失
+  </div>
+</div>
+
+<!-- Visa Summary -->
+<div class="visa-summary">
+  <div class="visa-card need-visa">
+    <h3>❌ 需辦簽證（台灣護照）— 4人</h3>
+    <div class="names">
+      Joy <span class="badge badge-tw">🇹🇼 台灣</span><br>
+      Angela <span class="badge badge-tw">🇹🇼 台灣</span><br>
+      Catherine <span class="badge badge-tw">🇹🇼 台灣</span><br>
+      Chris <span class="badge badge-tw">🇹🇼 台灣</span>
+    </div>
+  </div>
+  <div class="visa-card no-visa">
+    <h3>✅ 免簽 90天（加拿大／美國護照）— 3人</h3>
+    <div class="names">
+      羽珊 <span class="badge badge-ca">🇨🇦 加拿大</span><br>
+      瑜寶 <span class="badge badge-ca">🇨🇦 加拿大</span><br>
+      Wayne <span class="badge badge-us">🇺🇸 美國</span><br>
+      Alexandra <span class="badge" style="background:#f0f0f0;color:#666;">⬜ 待確認</span><br>
+      <br>
+      <span style="font-size:0.8rem; color:#666; font-weight:normal;">
+        仍須確認：護照效期 ≥ 離境後30天<br>
+        護照需有2頁連續空白簽證頁<br>
+        建議攜帶回程機票紙本證明
+      </span>
+    </div>
+  </div>
+</div>
+
+
+<!-- Execution Order - Top Priority -->
+<div class="notes-section" style="border: 2px solid #e74c3c; background: #fff5f5;">
+  <h2 style="color: #e74c3c;">⏱ 建議執行順序（台灣護照 4人）</h2>
+  <div style="font-size: 0.95rem; line-height: 2; padding: 8px 0;">
+    <strong>❶</strong> 拍證件照（送件日前3個月內拍即可，可提早處理）<br>
+    <strong>❷</strong> 確認機票 ＋ 確認住宿<br>
+    <strong>❸</strong> 製作英文行程表（行程住宿大致確認就可以先做草稿）<br>
+    <strong>❹</strong> 電話預約辦證時間（4人約同一天）<br>
+    <strong>❺</strong> 填寫 DHA-84 表格<br>
+    <strong>❻</strong> 預約前一週印財力證明<br>
+    <strong>❼</strong> 攜帶全部文件，4人一起親辦
+  </div>
+  <div style="background: #fff0f0; border-radius: 6px; padding: 10px 14px; margin-top: 8px; font-size: 0.85rem; line-height: 1.7;">
+    <strong>📞 電話預約時間怎麼抓？</strong><br>
+    送件後 <strong>10個工作天</strong>（約2週）領件 ＋ 簽證效期 <strong>3個月</strong><br>
+    → 最早：出發日前 3個月 送件（太早簽證會過期）<br>
+    → 最晚：出發日前 4-5 週送件（預留領件＋緩衝時間）<br>
+    → <strong>建議：出發日前 6-8 週電話預約，出發前約2個月送件最穩</strong>
+  </div>
+  <div style="font-size: 0.85rem; color: #e74c3c; margin-top: 6px; font-weight: 600;">⚠️ 送件後護照會被收走約15-30個工作天（3-6週），這段期間不能出國</div>
+</div>
+
+<!-- ===== SECTION: 護照 ===== -->
+<div class="notes-section">
+  <h2>📘 護照確認 — 每人需備齊以下</h2>
+  <div class="detail-box">
+    <strong>全員（8人）都需要確認：</strong>
+    <ul>
+      <li><strong>護照效期：</strong>離開南非日（12/5）之後至少還有 30 天效期 → 護照到期日須在 <strong>2027/01/04 之後</strong></li>
+      <li><strong>護照空白頁：</strong>至少 <strong>2 頁連續空白簽證頁</strong>（不含備註頁 Endorsement / Observation 頁）</li>
+    </ul>
+  </div>
+  <div class="detail-box">
+    <strong>台灣護照持有者（4人）另外需要：</strong>
+    <ul>
+      <li><strong>目前護照正本</strong> ×1 — 送件時繳交，領簽證時取回</li>
+      <li><strong>目前護照影本</strong> ×1 — 個人資料頁（有照片那頁）</li>
+      <li><strong>舊護照正本</strong> ×1 — 如有換過護照，需帶前一本</li>
+    </ul>
+  </div>
+  <div class="detail-box">
+    <strong>加拿大／美國護照持有者（3人）：</strong>
+    <ul>
+      <li><strong>護照正本</strong> — 入境隨身攜帶</li>
+      <li><strong>護照影本</strong> ×1 — 建議自備影本，萬一護照遺失可用</li>
+      <li>不需要舊護照</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Progress Bar -->
+<div class="progress-bar-wrapper">
+  <h3>📊 整體完成進度 <span id="progress-count"></span></h3>
+  <div class="progress-track">
+    <div class="progress-fill" id="progress-fill"></div>
+    <div class="progress-text" id="progress-text"></div>
+  </div>
+  <button class="reset-btn" onclick="resetAll()">🗑️ 清除所有打勾</button>
+</div>
+
+<!-- ===== MAIN TABLE ===== -->
+<div class="table-wrapper">
+<table>
+<thead>
+  <tr>
+    <th>待辦項目</th>
+    <th>Joy</th>
+    <th>Angela</th>
+    <th>Catherine</th>
+    <th>Chris</th>
+    <th>羽珊🇨🇦</th>
+    <th>瑜寶🇨🇦</th>
+    <th>Wayne🇺🇸</th>
+    <th>Alexandra⬜</th>
+  </tr>
+</thead>
+<tbody>
+
+  <!-- Section: 護照 -->
+  <tr class="section-header"><td colspan="9">📘 護照確認</td></tr>
+    <tr>
+    <td>護照效期 ≥ 2027/01/04（離境日12/5＋30天）</td>
+    <td class="cb-cell"><input type="checkbox" id="r0_joy" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r0_angela" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r0_catherine" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r0_chris" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r0_yushan" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r0_yubao" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r0_wayne" onchange="save(this)"></td>
+<td class="cb-cell"><input type="checkbox" id="r0_alexandra" onchange="save(this)"></td>
+  </tr>
+    <tr>
+    <td>護照空白簽證頁 ≥ 2頁連續</td>
+    <td class="cb-cell"><input type="checkbox" id="r1_joy" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r1_angela" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r1_catherine" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r1_chris" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r1_yushan" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r1_yubao" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r1_wayne" onchange="save(this)"></td>
+<td class="cb-cell"><input type="checkbox" id="r1_alexandra" onchange="save(this)"></td>
+  </tr>
+    <tr>
+    <td>護照正本</td>
+    <td class="cb-cell"><input type="checkbox" id="r2_joy" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r2_angela" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r2_catherine" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r2_chris" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r2_yushan" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r2_yubao" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r2_wayne" onchange="save(this)"></td>
+<td class="cb-cell"><input type="checkbox" id="r2_alexandra" onchange="save(this)"></td>
+  </tr>
+    <tr>
+    <td>護照影本 ×1（個人資料頁）</td>
+    <td class="cb-cell"><input type="checkbox" id="r3_joy" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r3_angela" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r3_catherine" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r3_chris" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r3_yushan" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r3_yubao" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r3_wayne" onchange="save(this)"></td>
+<td class="cb-cell"><input type="checkbox" id="r3_alexandra" onchange="save(this)"></td>
+  </tr>
+    <tr>
+    <td>舊護照正本（有換過護照者）⚠必帶</td>
+    <td class="cb-cell"><input type="checkbox" id="r4_joy" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r4_angela" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r4_catherine" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r4_chris" onchange="save(this)"></td><td class="na">—</td><td class="na">—</td><td class="na">—</td>
+<td class="na" style="background:#fff9c4;">⬜ 待確認</td>
+  </tr>
+
+  <!-- Section: 簽證 (台灣護照) -->
+  <tr class="section-header"><td colspan="9">📝 簽證申辦（僅台灣護照 4人）</td></tr>
+  
+    <tr class="blocker">
+    <td>① DHA-84 簽證申請表 <span class="blocker-tag">BLOCKER</span><br>
+      <small>黑色原子筆、全英文填寫、本人簽名（與護照相同）<br>
+      旅遊簽填到第6頁即可。建議印2份備用<br>
+      📎 <a href="https://schoolaplus.com/articles-detail.asp?seq=5079" target="_blank">填寫範例教學（中文翻譯對照）</a><br>
+      📎 <a href="https://www.journeyafrica.tw/post/%E5%8D%97%E9%9D%9E%E7%B0%BD%E8%AD%89%E8%BE%A6%E7%90%86%E5%A4%A7%E8%A3%9C%E5%B8%96%EF%BC%81%E5%8D%97%E9%9D%9E%E7%B0%BD%E8%AD%89%E6%80%8E%E9%BA%BC%E6%BA%96%E5%82%99%EF%BC%9F%E8%87%AA%E7%94%B1%E8%A1%8C%E3%80%81%E5%8D%97%E9%9D%9E%E8%A6%AA%E5%8F%8B%E9%82%80%E8%AB%8B%E3%80%81%E8%88%87%E6%9C%AA%E6%88%90%E5%B9%B4%E5%90%8C%E8%A1%8C%E9%83%BD%E8%AE%93%E4%BD%A0%E4%B8%80%E6%AC%A1%E9%80%9A%E9%97%9C%E4%B8%8D%E8%A3%9C%E4%BB%B6%EF%BC%81" target="_blank">手把手填寫教學（2025版）</a></small>
+    </td>
+    <td class="cb-cell"><input type="checkbox" id="r5_joy" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r5_angela" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r5_catherine" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r5_chris" onchange="save(this)"></td><td class="na">免簽</td><td class="na">免簽</td><td class="na">免簽</td>
+<td class="na" style="background:#fff9c4;">⬜ 待確認</td>
+  </tr>
+
+    <tr>
+    <td>② 2吋彩色證件照 ×1<br>
+      <small>3個月內拍攝｜3.5cm×4.5cm｜白色背景<br>
+      不可露齒、不可修圖、頭髮不遮耳<br>
+      ⭐ 辦事處一樓有快拍機</small>
+    </td>
+    <td class="cb-cell"><input type="checkbox" id="r6_joy" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r6_angela" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r6_catherine" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r6_chris" onchange="save(this)"></td><td class="na">免簽</td><td class="na">免簽</td><td class="na">免簽</td>
+<td class="na" style="background:#fff9c4;">⬜ 待確認</td>
+  </tr>
+
+    <tr class="blocker">
+    <td>③ 航班訂位證明 <span class="blocker-tag">BLOCKER</span><br>
+      <small>須含：搭乘人姓名、航班時間、出入境機場<br>
+      來回機票都要｜需確認機票後才能印</small>
+    </td>
+    <td class="cb-cell"><input type="checkbox" id="r7_joy" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r7_angela" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r7_catherine" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r7_chris" onchange="save(this)"></td><td class="na">免簽</td><td class="na">免簽</td><td class="na">免簽</td>
+<td class="na" style="background:#fff9c4;">⬜ 待確認</td>
+  </tr>
+
+    <tr class="blocker">
+    <td>④ 財力證明 <span class="blocker-tag">BLOCKER</span><br>
+      <small>⏰ <strong>預約前1週內才去印！</strong>太早印會被退<br>
+      ——接受以下任一種——<br>
+      A. 存摺戶名頁 ＋ 近3個月交易明細<br>
+      B. 網路銀行列印近3個月交易明細<br>
+      C. 銀行開立近3個月存款對帳單<br>
+      ⚠ 辦事處前一天建議去刷存摺更新到最新紀錄</small>
+    </td>
+    <td class="cb-cell"><input type="checkbox" id="r8_joy" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r8_angela" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r8_catherine" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r8_chris" onchange="save(this)"></td><td class="na">免簽</td><td class="na">免簽</td><td class="na">免簽</td>
+<td class="na" style="background:#fff9c4;">⬜ 待確認</td>
+  </tr>
+
+    <tr class="blocker">
+    <td>⑤ 英文旅遊行程表 ＋ 每日住宿資訊 <span class="blocker-tag">BLOCKER</span><br>
+      <small>每天行程＋住宿名稱、地址、電話<br>
+      住宿訂位須含申請人英文姓名<br>
+      ⚠ 需機票＋住宿全確認後才能製作<br>
+      建議印兩份（一份交、一份當面試小抄）</small>
+    </td>
+    <td class="cb-cell"><input type="checkbox" id="r9_joy" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r9_angela" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r9_catherine" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r9_chris" onchange="save(this)"></td><td class="na">免簽</td><td class="na">免簽</td><td class="na">免簽</td>
+<td class="na" style="background:#fff9c4;">⬜ 待確認</td>
+  </tr>
+
+    <tr>
+    <td>⑥ 電話預約辦證時間 <span class="blocker-tag">BLOCKER</span><br>
+      <small>02-27152295｜週一至週五 9:00-16:30<br>
+      辦證時間：平日 9:00-12:00<br>
+      ⭐ 建議出發前 <strong>6-8 週</strong>預約（≈ 2026年11月初）<br>
+      ⭐ <strong>4人約同一天一起去</strong>，同團一起辦比較順<br>
+      太晚預約 → 排不到時間 → 簽證趕不上</small>
+    </td>
+    <td class="cb-cell"><input type="checkbox" id="r10_joy" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r10_angela" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r10_catherine" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r10_chris" onchange="save(this)"></td><td class="na">免簽</td><td class="na">免簽</td><td class="na">免簽</td>
+<td class="na" style="background:#fff9c4;">⬜ 待確認</td>
+  </tr>
+
+    <tr>
+    <td>⑦ 本人親赴辦事處辦理<br>
+      <small>台北市敦化北路205號10樓1002室<br>
+      不可委託他人，需本人到場面試<br>
+      簽證官會詢問行程細節，務必熟記行程<br>
+      ⚠️ <strong style="color:#e74c3c;">護照正本會被收走！送件～領件（約15-30個工作天（3-6週））期間不能出國</strong></small>
+    </td>
+    <td class="cb-cell"><input type="checkbox" id="r11_joy" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r11_angela" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r11_catherine" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r11_chris" onchange="save(this)"></td><td class="na">免簽</td><td class="na">免簽</td><td class="na">免簽</td>
+<td class="na" style="background:#fff9c4;">⬜ 待確認</td>
+  </tr>
+
+    <tr>
+    <td>⑧ 領取簽證（送件後約15-30個工作天（3-6週））<br>
+      <small>平日 9:00-12:00 才能領｜需帶收據<br>
+      急件可7天後致電詢問</small>
+    </td>
+    <td class="cb-cell"><input type="checkbox" id="r12_joy" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r12_angela" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r12_catherine" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r12_chris" onchange="save(this)"></td><td class="na">免簽</td><td class="na">免簽</td><td class="na">免簽</td>
+<td class="na" style="background:#fff9c4;">⬜ 待確認</td>
+  </tr>
+
+  <!-- Section: 疫苗 -->
+  <tr class="section-header"><td colspan="9">💉 疫苗 / 健康準備（全員）</td></tr>
+    <tr>
+    <td>黃熱病疫苗（小黃卡）→ 不需要 ✅<br>
+      <small>⚠ 僅限從黃熱病疫區「轉機或入境」才需要<br>
+      若台灣 → 直飛或非疫區轉機 → 不需要<br>
+      詳見下方疫區國家列表</small>
+    </td>
+    <td class="cb-cell"><input type="checkbox" id="r13_joy" onchange="save(this)"><label>視航班</label></td><td class="cb-cell"><input type="checkbox" id="r13_angela" onchange="save(this)"><label>視航班</label></td><td class="cb-cell"><input type="checkbox" id="r13_catherine" onchange="save(this)"><label>視航班</label></td><td class="cb-cell"><input type="checkbox" id="r13_chris" onchange="save(this)"><label>視航班</label></td><td class="cb-cell"><input type="checkbox" id="r13_yushan" onchange="save(this)"><label>視航班</label></td><td class="cb-cell"><input type="checkbox" id="r13_yubao" onchange="save(this)"><label>視航班</label></td><td class="cb-cell"><input type="checkbox" id="r13_wayne" onchange="save(this)"><label>視航班</label></td>
+<td class="cb-cell"><input type="checkbox" id="r13_alexandra" onchange="save(this)"></td>
+  </tr>
+    <tr>
+    <td>A型肝炎疫苗（建議）<br>
+      <small>南非飲食飲水有傳染風險</small></td>
+    <td class="cb-cell"><input type="checkbox" id="r14_joy" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r14_angela" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r14_catherine" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r14_chris" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r14_yushan" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r14_yubao" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r14_wayne" onchange="save(this)"></td>
+<td class="cb-cell"><input type="checkbox" id="r14_alexandra" onchange="save(this)"></td>
+  </tr>
+    <tr>
+    <td>狂犬病疫苗（建議評估）<br>
+      <small>行程含多個野生動物保護區<br>
+      需提前1個月（3劑、間隔21天）</small></td>
+    <td class="cb-cell"><input type="checkbox" id="r15_joy" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r15_angela" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r15_catherine" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r15_chris" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r15_yushan" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r15_yubao" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r15_wayne" onchange="save(this)"></td>
+<td class="cb-cell"><input type="checkbox" id="r15_alexandra" onchange="save(this)"></td>
+  </tr>
+    <tr>
+    <td>旅遊醫學門診（備用藥品）<br>
+      <small>出發前2-4週就診｜帶旅行行程表<br>
+      📎 <a href="https://www.cdc.gov.tw/En/Category/Page/ucmuQnzcJPue77qHt0IXeg" target="_blank">旅遊醫學門診哪裡找</a></small></td>
+    <td class="cb-cell"><input type="checkbox" id="r16_joy" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r16_angela" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r16_catherine" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r16_chris" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r16_yushan" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r16_yubao" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r16_wayne" onchange="save(this)"></td>
+<td class="cb-cell"><input type="checkbox" id="r16_alexandra" onchange="save(this)"></td>
+  </tr>
+
+    <tr>
+    <td>瘧疾預防用藥 ⚠️<br>
+      <small><strong style="color:#e74c3c;">Nelspruit/克魯格國家公園是瘧疾風險區</strong><br>
+      11月是高風險期（10月～隔年5月）<br>
+      出發前需至旅遊醫學門診取得預防藥物<br>
+      需在抵達疫區前就開始服用</small>
+    </td>
+    <td class="cb-cell"><input type="checkbox" id="r20_joy" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r20_angela" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r20_catherine" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r20_chris" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r20_yushan" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r20_yubao" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r20_wayne" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r20_alexandra" onchange="save(this)"></td>
+  </tr>
+
+  <!-- Section: 保險 -->
+  <tr class="section-header"><td colspan="9">🛡️ 旅遊保險（全員強烈建議）</td></tr>
+    <tr>
+    <td>旅遊平安險 ＋ 海外醫療險<br>
+      <small>南非醫院要求先付費才治療<br>
+      台灣健保不給付海外醫療全額<br>
+      建議含：醫療（至少USD 100,000）、<br>
+      緊急醫療撤離、行李遺失、班機延誤<br>
+      ⭐ 行程含動物保護區＋高風險戶外活動<br>
+      確認保單是否涵蓋 Safari / 冒險活動</small>
+    </td>
+    <td class="cb-cell"><input type="checkbox" id="r17_joy" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r17_angela" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r17_catherine" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r17_chris" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r17_yushan" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r17_yubao" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r17_wayne" onchange="save(this)"></td>
+<td class="cb-cell"><input type="checkbox" id="r17_alexandra" onchange="save(this)"></td>
+  </tr>
+
+  <!-- Section: 機票＆住宿 -->
+  <tr class="section-header"><td colspan="9">✈️ 機票 &amp; 住宿確認（全員）</td></tr>
+    <tr class="blocker">
+    <td>機票訂位確認 <span class="blocker-tag">BLOCKER</span><br>
+      <small>🇹🇼 台灣護照：簽證必備文件<br>
+      🇨🇦🇺🇸 免簽者：入境時可能被要求出示回程機票<br>
+      → 全員都需要確認</small>
+    </td>
+    <td class="cb-cell"><input type="checkbox" id="r18_joy" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r18_angela" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r18_catherine" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r18_chris" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r18_yushan" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r18_yubao" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r18_wayne" onchange="save(this)"></td>
+<td class="cb-cell"><input type="checkbox" id="r18_alexandra" onchange="save(this)"></td>
+  </tr>
+    <tr class="blocker">
+    <td>住宿訂位確認 <span class="blocker-tag">BLOCKER</span><br>
+      <small>🇹🇼 簽證行程表必須有每日住宿地址電話<br>
+      🇨🇦🇺🇸 入境官員可能詢問住宿安排<br>
+      住宿確認單上需有旅客英文姓名</small>
+    </td>
+    <td class="cb-cell"><input type="checkbox" id="r19_joy" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r19_angela" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r19_catherine" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r19_chris" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r19_yushan" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r19_yubao" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r19_wayne" onchange="save(this)"></td>
+<td class="cb-cell"><input type="checkbox" id="r19_alexandra" onchange="save(this)"></td>
+  </tr>
+
+</tbody>
+</table>
+</div>
+
+<!-- BLOCKER Summary -->
+<div class="notes-section">
+  <h2>🚨 Blocker 依賴關係（卡住就辦不了簽證）</h2>
+  <div class="detail-box warn">
+    <strong>可以提早做的：</strong>
+    <ul>
+      <li>✅ <strong>證件照</strong> — 送件日前3個月內拍的都有效，隨時可拍</li>
+      <li>✅ <strong>英文行程表</strong> — 行程住宿大致確認就可以先做草稿版，送件前再微調定稿</li>
+    </ul>
+    <br>
+    <strong>有前後依賴的（卡住就動不了）：</strong>
+    <ul>
+      <li><strong>機票確認</strong> → 才能印航班訂位證明（③）＋ 填 DHA-84 航班欄位</li>
+      <li><strong>住宿確認</strong> → 行程表才能定稿（⑤）＋ 填 DHA-84 住宿欄位</li>
+      <li><strong>電話預約</strong> → 才有辦證時間（⑥），太晚打 → 排不到 → 來不及</li>
+      <li><strong>財力證明</strong> → 預約前1週內才印（④），印太早反而作廢</li>
+    </ul>
+    <br>
+    <strong>⏱ 核心卡點：機票＋住宿 → 一切才能動</strong>
+  </div>
+</div>
+
+<!-- DHA-84 填寫重點 -->
+<div class="notes-section">
+  <h2>📝 DHA-84 簽證表格 — 填寫重點</h2>
+  <div class="detail-box">
+    <ul>
+      <li>全程用<strong>同一支黑色原子筆</strong>填寫，不可用立可白塗改（錯了重印）</li>
+      <li>旅遊簽只需填到<strong>第6頁</strong>（P.128-P.133）</li>
+      <li>國家欄位寫 <strong>TAIWAN R.O.C</strong></li>
+      <li>不適用的欄位寫 <strong>Not Applicable</strong>（不要留空白）</li>
+      <li>「No」的欄位打 <strong>✗</strong>（不是打✓）</li>
+      <li>簽名須與護照上<strong>完全一致</strong>（護照簽中文就簽中文）</li>
+      <li>日期用<strong>西元年</strong>（不是民國年）</li>
+      <li>住宿欄填第一晚住宿資訊（Westin Cape Town）</li>
+      <li>建議印<strong>2-3份空白表格</strong>備用</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 財力證明 -->
+<div class="notes-section">
+  <h2>💰 財力證明 — 接受哪些文件</h2>
+  <div class="detail-box">
+    <strong>以下三種擇一：</strong>
+    <ul>
+      <li><strong>方案A：</strong>實體存摺戶名頁影本 ＋ 近3個月交易明細影本<br>
+        <small>→ 辦事處前一天去銀行刷本子更新到最新！有人因此被退件要求去補刷</small></li>
+      <li><strong>方案B：</strong>網路銀行列印近3個月交易明細<br>
+        <small>→ 需完整顯示帳戶名稱＋所有交易紀錄</small></li>
+      <li><strong>方案C：</strong>臨櫃請銀行開立近3個月存款對帳單（有銀行章）</li>
+    </ul>
+    <br>
+    <strong>⚠ 重要提醒：</strong>
+    <ul>
+      <li>必須在<strong>預約前1週內</strong>取得，太早列印會被退</li>
+      <li>明細要涵蓋<strong>最近3個月內所有交易紀錄</strong></li>
+      <li>帳戶餘額沒有硬性金額要求，但建議有合理存款可支應旅費</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 黃熱病疫區 -->
+<div class="notes-section">
+  <h2>🦟 黃熱病疫區國家列表</h2>
+  <div class="detail-box">
+    <strong>南非入境規定：</strong>若你在入境南非前，曾經入境或轉機停留超過12小時於以下任一國家，必須出示黃熱病疫苗接種證明（小黃卡）。疫苗須在<strong>抵達南非前至少10天</strong>接種。接種後<strong>終身有效</strong>。
+  </div>
+
+  <div class="yf-grid">
+    <div class="yf-region">
+      <h4>🌍 非洲（30國）</h4>
+      <div class="countries">
+        安哥拉、貝南、布吉納法索、蒲隆地、喀麥隆、中非共和國、查德、剛果共和國、象牙海岸、剛果民主共和國、赤道幾內亞、衣索比亞、加彭、甘比亞、迦納、幾內亞、幾內亞比索、肯亞、賴比瑞亞、馬利、茅利塔尼亞、尼日、奈及利亞、盧安達、塞內加爾、獅子山、南蘇丹、蘇丹、多哥、烏干達
+      </div>
+    </div>
+    <div class="yf-region">
+      <h4>🌎 中南美洲（14國）</h4>
+      <div class="countries">
+        阿根廷*、玻利維亞、巴西、哥倫比亞、厄瓜多、法屬圭亞那、蓋亞那、巴拿馬、巴拉圭、秘魯、蘇利南、千里達及托巴哥（僅千里達島）、委內瑞拉
+        <br><small>*部分地區有風險</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="detail-box">
+    <strong>🛫 判斷方式：</strong>確認你的航班是否在以上國家<strong>轉機停留超過12小時</strong>。如果你的航班是「台灣 → 香港/新加坡/杜拜/多哈 → 南非」這類路線，<strong>不需要</strong>打黃熱病疫苗。如果經過肯亞、衣索比亞（亞的斯亞貝巴常見轉機點）等國轉機，就<strong>需要</strong>。
+  </div>
+</div>
+
+<!-- 保險建議 -->
+<div class="notes-section">
+  <h2>🛡️ 旅遊保險 — 為什麼強烈建議</h2>
+  <div class="detail-box">
+    <strong>南非不強制要保險，但以下原因讓保險幾乎是必備：</strong>
+    <ul>
+      <li>🏥 南非醫院（特別是私立）要求<strong>先付費才治療</strong>，費用非常高</li>
+      <li>🚫 台灣健保海外僅核退部分費用，美加保險在南非也不一定適用</li>
+      <li>🦁 你們行程包含多個<strong>野生動物保護區</strong>（Kragga Kamma、Addo Elephant Park）＋<strong>Zip Line</strong>＋<strong>健行步道</strong>，屬於高風險活動</li>
+      <li>🚗 南非<strong>自駕</strong>交通事故率高，路況不同於台灣</li>
+      <li>📦 長途國際航班<strong>行李遺失/延誤</strong>機率較高</li>
+    </ul>
+    <br>
+    <strong>建議保單涵蓋：</strong>
+    <ul>
+      <li>海外醫療（至少 USD 100,000）</li>
+      <li>緊急醫療撤離/轉送（至少 USD 250,000）</li>
+      <li>行李遺失/延誤</li>
+      <li>班機延誤/取消</li>
+      <li>旅程取消/中斷</li>
+      <li>⭐ 確認保單涵蓋「冒險活動 / Safari / 戶外運動」</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 當地支付＆現金 -->
+<div class="notes-section">
+  <h2>💰 當地支付＆換匯建議</h2>
+  <div class="detail-box">
+    <strong>南非貨幣：南非蘭特（ZAR / R）</strong><br>
+    目前匯率約 1 ZAR ≈ NT$1.65（出發前再確認）
+  </div>
+  <div class="detail-box">
+    <strong>刷卡 vs 現金？</strong>
+    <ul>
+      <li><strong>開普敦市區、大型餐廳、飯店、超市、加油站</strong> → Visa / Mastercard 幾乎都能刷</li>
+      <li><strong>國家公園、市場、路邊攤、小費</strong> → 只收現金</li>
+      <li><strong>結論：以刷卡為主，但一定要帶現金備用</strong></li>
+      <li>American Express / Diners Club 接受度低，盡量帶 Visa 或 Mastercard</li>
+    </ul>
+  </div>
+  <div class="detail-box">
+    <strong>建議每人換多少現金？</strong>
+    <ul>
+      <li>每人建議攜帶約 <strong>R2,000–R3,000</strong>（約 NT$3,300–5,000）現金</li>
+      <li>用途：小費、市場購物、國家公園門票、緊急備用</li>
+      <li>不需要帶太多現金，當地 ATM 可用國際卡提款（但注意手續費）</li>
+      <li><strong>換匯方式：</strong>台灣銀行不一定有蘭特，建議帶美金到當地機場或市區換匯所兌換，或直接用 ATM 提款</li>
+    </ul>
+  </div>
+  <div class="detail-box">
+    <strong>💡 小費文化（現金必備）</strong>
+    <ul>
+      <li>餐廳：帳單的 10%–15%</li>
+      <li>Safari 導遊 / 司機：每人每天 R100–R200</li>
+      <li>飯店行李員：每次 R20–R50</li>
+      <li>加油站服務員：R10–R20</li>
+      <li>代客泊車：R10–R20</li>
+      <li>⭐ 建議準備 R10、R20、R50 小面額鈔票</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 現金分配策略 -->
+<div class="notes-section">
+  <h2>👛 現金分配＆防盜策略</h2>
+  <div class="detail-box warn">
+    <strong>核心原則：分散風險，不要把所有錢放在同一個地方</strong>
+  </div>
+  <div class="detail-box">
+    <strong>建議分配方式（8人團）：</strong>
+    <ul>
+      <li><strong>公費基金：</strong>指定 1-2 人保管團體公費（共同餐費、門票、小費池），用腰包隨身</li>
+      <li><strong>個人現金：</strong>每人身上只帶當天需要的金額（R500以內），其餘鎖在住宿保險箱</li>
+      <li><strong>備用現金：</strong>另外分給 2-3 人各保管一部分緊急備用金，萬一某人被偷，全團還有備用</li>
+      <li><strong>信用卡也分散：</strong>不要所有卡放在同一個包裡</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 治安防護 -->
+<div class="notes-section">
+  <h2>🔒 治安防護措施</h2>
+  <div class="detail-box warn">
+    <strong>⚠️ 華人在南非是高風險目標</strong> — 近年多起華人遭搶、綁架事件，官方使館持續發布警告。你們是8人團已經比個人行動安全很多，但仍需高度警覺。
+  </div>
+  <div class="detail-box">
+    <strong>🚗 自駕注意事項</strong>
+    <ul>
+      <li>南非是<strong>右駕左行</strong>（跟台灣相反）</li>
+      <li>車門隨時上鎖，車窗不要全開</li>
+      <li>停紅燈時保持與前車距離，引擎不熄火，保持機動性</li>
+      <li>車內<strong>不留任何可見物品</strong>（包包、相機、外套下的東西都不行）</li>
+      <li>避免夜間開車，尤其約堡地區</li>
+      <li>路邊有人兜售或乞討，不要搖下車窗</li>
+    </ul>
+  </div>
+  <div class="detail-box">
+    <strong>🚶 日常行動守則</strong>
+    <ul>
+      <li><strong>結伴行動</strong>，8人團盡量不要落單，最少2人一組</li>
+      <li><strong>低調不露財：</strong>不戴金飾、不拿高檔包、手機不外露</li>
+      <li>觀光區（V&A Waterfront 等）有私人保全，相對安全</li>
+      <li>不要走進偏僻小巷或貧民區</li>
+      <li>天黑後不要在街上步行，用 Uber 或自駕</li>
+      <li>避開約堡市中心區域（你們只是轉機不停留，OK）</li>
+    </ul>
+  </div>
+  <div class="detail-box">
+    <strong>📱 手機＆證件安全</strong>
+    <ul>
+      <li>護照正本鎖在住宿保險箱，隨身帶<strong>護照影本</strong></li>
+      <li>手機拍照後收起來，不要邊走邊滑手機</li>
+      <li>重要文件（護照、保單、機票）拍照存雲端備份</li>
+      <li>建議辦一張當地 SIM 卡（機場可買），保持通訊暢通</li>
+    </ul>
+  </div>
+  <div class="detail-box">
+    <strong>🆘 遇到搶劫怎麼辦？</strong>
+    <ul>
+      <li><strong>不要反抗</strong> — 對方極可能有武器，生命安全優先</li>
+      <li>交出財物，不要激怒對方</li>
+      <li>脫離險境後立刻報警：<strong>10111</strong></li>
+      <li>聯繫台灣駐南非代表處：+27-12-430-6071（緊急）</li>
+    </ul>
+  </div>
+  <div class="detail-box">
+    <strong>📞 緊急聯絡電話</strong>
+    <ul>
+      <li>南非報警：<strong>10111</strong></li>
+      <li>南非救護車：<strong>10177</strong></li>
+      <li>台灣駐南非代表處（普利乞利亞）：+27-12-430-6071</li>
+      <li>外交部旅外國人急難救助：+886-800-085-095（免付費）</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 建議時程 -->
+<div class="notes-section">
+  <h2>🗓️ 建議時程表（以 2026/11/24 出發推算）</h2>
+  <div class="note-item"><span class="note-label info">📌 簽證效期3個月：</span>最早 2026/08/24 送件。建議 <strong>2026年9月中～10月初</strong>送件最穩。護照會被收走約3-6週。</div>
+  <div class="note-item"><span class="note-label" style="color:#e74c3c;">⚠️ 護照會被收走：</span><span style="color:#e74c3c;">送件～領件期間（約15-30個工作天（3-6週）），護照正本在辦事處，<strong>這段時間不能出國</strong>。請提前確認4人這段期間沒有其他出國計畫。</span></div>
+  <div class="note-item"><span class="note-label ok">2026年 8月底前：</span>確認機票＋住宿訂位（所有後續動作的前提）</div>
+  <div class="note-item"><span class="note-label ok">2026年 9月初～中：</span>電話預約簽證辦理時間（4人台灣護照，建議約同一天一起去）</div>
+  <div class="note-item"><span class="note-label ok">預約前1週：</span>去銀行列印財力證明＋填寫 DHA-84 表格＋拍證件照</div>
+  <div class="note-item"><span class="note-label ok">2026年 9月中～10月初：</span>備齊文件 → 4人一起親赴辦事處辦理簽證</div>
+  <div class="note-item"><span class="note-label ok">2026年 10月初～中：</span>領取簽證（送件後15-30個工作天（3-6週））</div>
+  <div class="note-item"><span class="note-label ok">2026年 10月底～11月初：</span>旅遊醫學門診＋疫苗（出發前2-4週）</div>
+  <div class="note-item"><span class="note-label ok">2026年 10月底～11月初：</span>購買旅遊保險</div>
+  <div class="note-item"><span class="note-label ok">2026年 11月中：</span>全部確認完畢，安心等出發！</div>
+</div>
+
+<p class="footer">最後更新：2025/05 ｜ 出發日暫定 2026/12/27 ｜ 路線：台北→香港→約堡→Nelspruit(克魯格)→開普敦→約堡→香港→台北 ｜ Alexandra護照待確認</p>
+
+<script>
+const STORAGE_KEY = 'sa-trip-checklist';
+
+function loadState() {
+  try {
+    const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    document.querySelectorAll('.cb-cell input[type="checkbox"]').forEach(cb => {
+      if (data[cb.id]) {
+        cb.checked = true;
+        cb.closest('td').classList.add('checked');
+      }
+    });
+  } catch(e) {}
+  updateProgress();
+}
+
+function save(cb) {
+  const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+  if (cb.checked) {
+    data[cb.id] = true;
+    cb.closest('td').classList.add('checked');
+  } else {
+    delete data[cb.id];
+    cb.closest('td').classList.remove('checked');
+  }
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  updateProgress();
+}
+
+function updateProgress() {
+  const all = document.querySelectorAll('.cb-cell input[type="checkbox"]');
+  const checked = document.querySelectorAll('.cb-cell input[type="checkbox"]:checked');
+  const total = all.length;
+  const done = checked.length;
+  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+  
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = pct + '%';
+  document.getElementById('progress-count').textContent = `（${done} / ${total}）`;
+}
+
+function resetAll() {
+  if (!confirm('確定要清除所有打勾紀錄嗎？')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  document.querySelectorAll('.cb-cell input[type="checkbox"]').forEach(cb => {
+    cb.checked = false;
+    cb.closest('td').classList.remove('checked');
+  });
+  updateProgress();
+}
+
+loadState();
+</script>
+
+</body>
+</html>
