@@ -42,20 +42,13 @@
   .pending { color: #f39c12; font-weight: 600; }
   .blocker-tag { display: inline-block; background: #e74c3c; color: #fff; font-size: 0.65rem; padding: 1px 6px; border-radius: 3px; margin-left: 4px; font-weight: 700; vertical-align: middle; }
 
-  /* Interactive checkboxes */
-  .cb-cell { cursor: pointer; user-select: none; }
-  .cb-cell input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: #27ae60; }
-  .cb-cell.checked { background: #f0faf0; }
-  .cb-cell label { cursor: pointer; font-size: 0.75rem; display: block; margin-top: 2px; }
 
-  /* Progress bar */
-  .progress-bar-wrapper { background: #fff; border-radius: 12px; padding: 16px 20px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-  .progress-bar-wrapper h3 { font-size: 0.9rem; color: #1a3a5c; margin-bottom: 10px; }
-  .progress-track { background: #e8edf2; border-radius: 8px; height: 24px; overflow: hidden; position: relative; }
-  .progress-fill { background: linear-gradient(90deg, #27ae60, #2ecc71); height: 100%; border-radius: 8px; transition: width 0.4s ease; min-width: 0; }
-  .progress-text { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; color: #1a3a5c; }
-  .reset-btn { background: none; border: 1px solid #ccc; border-radius: 6px; padding: 4px 12px; font-size: 0.75rem; color: #888; cursor: pointer; margin-top: 8px; float: right; }
-  .reset-btn:hover { background: #fee; border-color: #e74c3c; color: #e74c3c; }
+  
+  
+  
+  
+
+
 
   small { color: #888; font-weight: normal; }
   .detail-box { background: #f8f9fb; border-radius: 8px; padding: 12px 16px; margin: 6px 0; font-size: 0.82rem; line-height: 1.6; border-left: 3px solid #2471a3; }
@@ -94,13 +87,11 @@
 
 <!-- Usage Instructions -->
 <div class="notes-section" style="border: 1px solid #d5e8f0; background: #f0f8ff;">
-  <h2 style="color: #2471a3; font-size: 1rem;">📌 使用說明（請先看這裡）</h2>
+  <h2 style="color: #2471a3; font-size: 1rem;">📌 這是什麼？</h2>
   <div style="font-size: 0.85rem; line-height: 1.8; padding: 4px 0;">
-    ✅ 點表格裡的框框即可<strong>打勾</strong>，再點一下可以取消<br>
-    ✅ 打勾紀錄會<strong>自動儲存</strong>在你的瀏覽器裡，關掉再開還在<br>
-    ⚠️ 紀錄只存在<strong>你自己的裝置＋瀏覽器</strong>裡，別人看不到你的勾<br>
-    ⚠️ 請固定用<strong>同一台手機/電腦</strong>的<strong>同一個瀏覽器</strong>打開此頁面<br>
-    ❌ 換裝置、換瀏覽器、清除瀏覽紀錄、或用無痕模式 → 打勾紀錄會消失
+    📖 這個頁面是<strong>唯讀參考用</strong>，方便大家隨時查看簽證流程、治安須知、時程等資訊<br>
+    ✅ 打勾進度追蹤請到 <strong>Google Sheets 共享表格</strong>上操作<br>
+    🔗 這裡不需要打勾，只是展示目前的最新狀態
   </div>
 </div>
 
@@ -183,15 +174,6 @@
   </div>
 </div>
 
-<!-- Progress Bar -->
-<div class="progress-bar-wrapper">
-  <h3>📊 整體完成進度 <span id="progress-count"></span></h3>
-  <div class="progress-track">
-    <div class="progress-fill" id="progress-fill"></div>
-    <div class="progress-text" id="progress-text"></div>
-  </div>
-  <button class="reset-btn" onclick="resetAll()">🗑️ 清除所有打勾</button>
-</div>
 
 <!-- ===== MAIN TABLE ===== -->
 <div class="table-wrapper">
@@ -215,27 +197,27 @@
   <tr class="section-header"><td colspan="9">📘 護照確認</td></tr>
     <tr>
     <td>護照效期 ≥ 2027/01/04（離境日12/5＋30天）</td>
-    <td class="cb-cell"><input type="checkbox" id="r0_joy" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r0_angela" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r0_catherine" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r0_chris" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r0_yushan" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r0_yubao" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r0_wayne" onchange="save(this)"></td>
-<td class="cb-cell"><input type="checkbox" id="r0_alexandra" onchange="save(this)"></td>
+    <td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td>
+<td style="text-align:center;">⬜</td>
   </tr>
     <tr>
     <td>護照空白簽證頁 ≥ 2頁連續</td>
-    <td class="cb-cell"><input type="checkbox" id="r1_joy" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r1_angela" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r1_catherine" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r1_chris" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r1_yushan" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r1_yubao" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r1_wayne" onchange="save(this)"></td>
-<td class="cb-cell"><input type="checkbox" id="r1_alexandra" onchange="save(this)"></td>
+    <td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td>
+<td style="text-align:center;">⬜</td>
   </tr>
     <tr>
     <td>護照正本</td>
-    <td class="cb-cell"><input type="checkbox" id="r2_joy" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r2_angela" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r2_catherine" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r2_chris" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r2_yushan" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r2_yubao" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r2_wayne" onchange="save(this)"></td>
-<td class="cb-cell"><input type="checkbox" id="r2_alexandra" onchange="save(this)"></td>
+    <td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td>
+<td style="text-align:center;">⬜</td>
   </tr>
     <tr>
     <td>護照影本 ×1（個人資料頁）</td>
-    <td class="cb-cell"><input type="checkbox" id="r3_joy" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r3_angela" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r3_catherine" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r3_chris" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r3_yushan" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r3_yubao" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r3_wayne" onchange="save(this)"></td>
-<td class="cb-cell"><input type="checkbox" id="r3_alexandra" onchange="save(this)"></td>
+    <td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td>
+<td style="text-align:center;">⬜</td>
   </tr>
     <tr>
     <td>舊護照正本（有換過護照者）⚠必帶</td>
-    <td class="cb-cell"><input type="checkbox" id="r4_joy" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r4_angela" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r4_catherine" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r4_chris" onchange="save(this)"></td><td class="na">—</td><td class="na">—</td><td class="na">—</td>
+    <td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td class="na">—</td><td class="na">—</td><td class="na">—</td>
 <td class="na" style="background:#fff9c4;">⬜ 待確認</td>
   </tr>
 
@@ -249,7 +231,7 @@
       📎 <a href="https://schoolaplus.com/articles-detail.asp?seq=5079" target="_blank">填寫範例教學（中文翻譯對照）</a><br>
       📎 <a href="https://www.journeyafrica.tw/post/%E5%8D%97%E9%9D%9E%E7%B0%BD%E8%AD%89%E8%BE%A6%E7%90%86%E5%A4%A7%E8%A3%9C%E5%B8%96%EF%BC%81%E5%8D%97%E9%9D%9E%E7%B0%BD%E8%AD%89%E6%80%8E%E9%BA%BC%E6%BA%96%E5%82%99%EF%BC%9F%E8%87%AA%E7%94%B1%E8%A1%8C%E3%80%81%E5%8D%97%E9%9D%9E%E8%A6%AA%E5%8F%8B%E9%82%80%E8%AB%8B%E3%80%81%E8%88%87%E6%9C%AA%E6%88%90%E5%B9%B4%E5%90%8C%E8%A1%8C%E9%83%BD%E8%AE%93%E4%BD%A0%E4%B8%80%E6%AC%A1%E9%80%9A%E9%97%9C%E4%B8%8D%E8%A3%9C%E4%BB%B6%EF%BC%81" target="_blank">手把手填寫教學（2025版）</a></small>
     </td>
-    <td class="cb-cell"><input type="checkbox" id="r5_joy" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r5_angela" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r5_catherine" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r5_chris" onchange="save(this)"></td><td class="na">免簽</td><td class="na">免簽</td><td class="na">免簽</td>
+    <td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td class="na">免簽</td><td class="na">免簽</td><td class="na">免簽</td>
 <td class="na" style="background:#fff9c4;">⬜ 待確認</td>
   </tr>
 
@@ -259,7 +241,7 @@
       不可露齒、不可修圖、頭髮不遮耳<br>
       ⭐ 辦事處一樓有快拍機</small>
     </td>
-    <td class="cb-cell"><input type="checkbox" id="r6_joy" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r6_angela" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r6_catherine" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r6_chris" onchange="save(this)"></td><td class="na">免簽</td><td class="na">免簽</td><td class="na">免簽</td>
+    <td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td class="na">免簽</td><td class="na">免簽</td><td class="na">免簽</td>
 <td class="na" style="background:#fff9c4;">⬜ 待確認</td>
   </tr>
 
@@ -268,7 +250,7 @@
       <small>須含：搭乘人姓名、航班時間、出入境機場<br>
       來回機票都要｜需確認機票後才能印</small>
     </td>
-    <td class="cb-cell"><input type="checkbox" id="r7_joy" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r7_angela" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r7_catherine" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r7_chris" onchange="save(this)"></td><td class="na">免簽</td><td class="na">免簽</td><td class="na">免簽</td>
+    <td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td class="na">免簽</td><td class="na">免簽</td><td class="na">免簽</td>
 <td class="na" style="background:#fff9c4;">⬜ 待確認</td>
   </tr>
 
@@ -281,7 +263,7 @@
       C. 銀行開立近3個月存款對帳單<br>
       ⚠ 辦事處前一天建議去刷存摺更新到最新紀錄</small>
     </td>
-    <td class="cb-cell"><input type="checkbox" id="r8_joy" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r8_angela" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r8_catherine" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r8_chris" onchange="save(this)"></td><td class="na">免簽</td><td class="na">免簽</td><td class="na">免簽</td>
+    <td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td class="na">免簽</td><td class="na">免簽</td><td class="na">免簽</td>
 <td class="na" style="background:#fff9c4;">⬜ 待確認</td>
   </tr>
 
@@ -292,7 +274,7 @@
       ⚠ 需機票＋住宿全確認後才能製作<br>
       建議印兩份（一份交、一份當面試小抄）</small>
     </td>
-    <td class="cb-cell"><input type="checkbox" id="r9_joy" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r9_angela" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r9_catherine" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r9_chris" onchange="save(this)"></td><td class="na">免簽</td><td class="na">免簽</td><td class="na">免簽</td>
+    <td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td class="na">免簽</td><td class="na">免簽</td><td class="na">免簽</td>
 <td class="na" style="background:#fff9c4;">⬜ 待確認</td>
   </tr>
 
@@ -304,7 +286,7 @@
       ⭐ <strong>4人約同一天一起去</strong>，同團一起辦比較順<br>
       太晚預約 → 排不到時間 → 簽證趕不上</small>
     </td>
-    <td class="cb-cell"><input type="checkbox" id="r10_joy" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r10_angela" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r10_catherine" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r10_chris" onchange="save(this)"></td><td class="na">免簽</td><td class="na">免簽</td><td class="na">免簽</td>
+    <td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td class="na">免簽</td><td class="na">免簽</td><td class="na">免簽</td>
 <td class="na" style="background:#fff9c4;">⬜ 待確認</td>
   </tr>
 
@@ -315,7 +297,7 @@
       簽證官會詢問行程細節，務必熟記行程<br>
       ⚠️ <strong style="color:#e74c3c;">護照正本會被收走！送件～領件（約15-30個工作天（3-6週））期間不能出國</strong></small>
     </td>
-    <td class="cb-cell"><input type="checkbox" id="r11_joy" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r11_angela" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r11_catherine" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r11_chris" onchange="save(this)"></td><td class="na">免簽</td><td class="na">免簽</td><td class="na">免簽</td>
+    <td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td class="na">免簽</td><td class="na">免簽</td><td class="na">免簽</td>
 <td class="na" style="background:#fff9c4;">⬜ 待確認</td>
   </tr>
 
@@ -324,7 +306,7 @@
       <small>平日 9:00-12:00 才能領｜需帶收據<br>
       急件可7天後致電詢問</small>
     </td>
-    <td class="cb-cell"><input type="checkbox" id="r12_joy" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r12_angela" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r12_catherine" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r12_chris" onchange="save(this)"></td><td class="na">免簽</td><td class="na">免簽</td><td class="na">免簽</td>
+    <td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td class="na">免簽</td><td class="na">免簽</td><td class="na">免簽</td>
 <td class="na" style="background:#fff9c4;">⬜ 待確認</td>
   </tr>
 
@@ -336,28 +318,28 @@
       若台灣 → 直飛或非疫區轉機 → 不需要<br>
       詳見下方疫區國家列表</small>
     </td>
-    <td class="cb-cell"><input type="checkbox" id="r13_joy" onchange="save(this)"><label>視航班</label></td><td class="cb-cell"><input type="checkbox" id="r13_angela" onchange="save(this)"><label>視航班</label></td><td class="cb-cell"><input type="checkbox" id="r13_catherine" onchange="save(this)"><label>視航班</label></td><td class="cb-cell"><input type="checkbox" id="r13_chris" onchange="save(this)"><label>視航班</label></td><td class="cb-cell"><input type="checkbox" id="r13_yushan" onchange="save(this)"><label>視航班</label></td><td class="cb-cell"><input type="checkbox" id="r13_yubao" onchange="save(this)"><label>視航班</label></td><td class="cb-cell"><input type="checkbox" id="r13_wayne" onchange="save(this)"><label>視航班</label></td>
-<td class="cb-cell"><input type="checkbox" id="r13_alexandra" onchange="save(this)"></td>
+    <td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td>
+<td style="text-align:center;">⬜</td>
   </tr>
     <tr>
     <td>A型肝炎疫苗（建議）<br>
       <small>南非飲食飲水有傳染風險</small></td>
-    <td class="cb-cell"><input type="checkbox" id="r14_joy" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r14_angela" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r14_catherine" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r14_chris" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r14_yushan" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r14_yubao" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r14_wayne" onchange="save(this)"></td>
-<td class="cb-cell"><input type="checkbox" id="r14_alexandra" onchange="save(this)"></td>
+    <td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td>
+<td style="text-align:center;">⬜</td>
   </tr>
     <tr>
     <td>狂犬病疫苗（建議評估）<br>
       <small>行程含多個野生動物保護區<br>
       需提前1個月（3劑、間隔21天）</small></td>
-    <td class="cb-cell"><input type="checkbox" id="r15_joy" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r15_angela" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r15_catherine" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r15_chris" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r15_yushan" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r15_yubao" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r15_wayne" onchange="save(this)"></td>
-<td class="cb-cell"><input type="checkbox" id="r15_alexandra" onchange="save(this)"></td>
+    <td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td>
+<td style="text-align:center;">⬜</td>
   </tr>
     <tr>
     <td>旅遊醫學門診（備用藥品）<br>
       <small>出發前2-4週就診｜帶旅行行程表<br>
       📎 <a href="https://www.cdc.gov.tw/En/Category/Page/ucmuQnzcJPue77qHt0IXeg" target="_blank">旅遊醫學門診哪裡找</a></small></td>
-    <td class="cb-cell"><input type="checkbox" id="r16_joy" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r16_angela" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r16_catherine" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r16_chris" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r16_yushan" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r16_yubao" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r16_wayne" onchange="save(this)"></td>
-<td class="cb-cell"><input type="checkbox" id="r16_alexandra" onchange="save(this)"></td>
+    <td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td>
+<td style="text-align:center;">⬜</td>
   </tr>
 
     <tr>
@@ -367,7 +349,7 @@
       出發前需至旅遊醫學門診取得預防藥物<br>
       需在抵達疫區前就開始服用</small>
     </td>
-    <td class="cb-cell"><input type="checkbox" id="r20_joy" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r20_angela" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r20_catherine" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r20_chris" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r20_yushan" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r20_yubao" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r20_wayne" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r20_alexandra" onchange="save(this)"></td>
+    <td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td>
   </tr>
 
   <!-- Section: 保險 -->
@@ -381,8 +363,8 @@
       ⭐ 行程含動物保護區＋高風險戶外活動<br>
       確認保單是否涵蓋 Safari / 冒險活動</small>
     </td>
-    <td class="cb-cell"><input type="checkbox" id="r17_joy" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r17_angela" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r17_catherine" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r17_chris" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r17_yushan" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r17_yubao" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r17_wayne" onchange="save(this)"></td>
-<td class="cb-cell"><input type="checkbox" id="r17_alexandra" onchange="save(this)"></td>
+    <td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td>
+<td style="text-align:center;">⬜</td>
   </tr>
 
   <!-- Section: 機票＆住宿 -->
@@ -393,8 +375,8 @@
       🇨🇦🇺🇸 免簽者：入境時可能被要求出示回程機票<br>
       → 全員都需要確認</small>
     </td>
-    <td class="cb-cell"><input type="checkbox" id="r18_joy" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r18_angela" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r18_catherine" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r18_chris" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r18_yushan" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r18_yubao" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r18_wayne" onchange="save(this)"></td>
-<td class="cb-cell"><input type="checkbox" id="r18_alexandra" onchange="save(this)"></td>
+    <td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td>
+<td style="text-align:center;">⬜</td>
   </tr>
     <tr class="blocker">
     <td>住宿訂位確認 <span class="blocker-tag">BLOCKER</span><br>
@@ -402,8 +384,8 @@
       🇨🇦🇺🇸 入境官員可能詢問住宿安排<br>
       住宿確認單上需有旅客英文姓名</small>
     </td>
-    <td class="cb-cell"><input type="checkbox" id="r19_joy" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r19_angela" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r19_catherine" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r19_chris" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r19_yushan" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r19_yubao" onchange="save(this)"></td><td class="cb-cell"><input type="checkbox" id="r19_wayne" onchange="save(this)"></td>
-<td class="cb-cell"><input type="checkbox" id="r19_alexandra" onchange="save(this)"></td>
+    <td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td><td style="text-align:center;">⬜</td>
+<td style="text-align:center;">⬜</td>
   </tr>
 
 </tbody>
@@ -654,59 +636,7 @@
 
 <p class="footer">最後更新：2025/05 ｜ 出發日暫定 2026/12/27 ｜ 路線：台北→香港→約堡→Nelspruit(克魯格)→開普敦→約堡→香港→台北 ｜ Alexandra護照待確認</p>
 
-<script>
-const STORAGE_KEY = 'sa-trip-checklist';
 
-function loadState() {
-  try {
-    const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-    document.querySelectorAll('.cb-cell input[type="checkbox"]').forEach(cb => {
-      if (data[cb.id]) {
-        cb.checked = true;
-        cb.closest('td').classList.add('checked');
-      }
-    });
-  } catch(e) {}
-  updateProgress();
-}
-
-function save(cb) {
-  const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-  if (cb.checked) {
-    data[cb.id] = true;
-    cb.closest('td').classList.add('checked');
-  } else {
-    delete data[cb.id];
-    cb.closest('td').classList.remove('checked');
-  }
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  updateProgress();
-}
-
-function updateProgress() {
-  const all = document.querySelectorAll('.cb-cell input[type="checkbox"]');
-  const checked = document.querySelectorAll('.cb-cell input[type="checkbox"]:checked');
-  const total = all.length;
-  const done = checked.length;
-  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
-  
-  document.getElementById('progress-fill').style.width = pct + '%';
-  document.getElementById('progress-text').textContent = pct + '%';
-  document.getElementById('progress-count').textContent = `（${done} / ${total}）`;
-}
-
-function resetAll() {
-  if (!confirm('確定要清除所有打勾紀錄嗎？')) return;
-  localStorage.removeItem(STORAGE_KEY);
-  document.querySelectorAll('.cb-cell input[type="checkbox"]').forEach(cb => {
-    cb.checked = false;
-    cb.closest('td').classList.remove('checked');
-  });
-  updateProgress();
-}
-
-loadState();
-</script>
 
 </body>
 </html>
